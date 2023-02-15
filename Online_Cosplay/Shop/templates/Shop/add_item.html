@@ -1,0 +1,16 @@
+{% extends "Online_Cosplay/header.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="container py-5">
+    <h1>Add Item Form</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ add_item_form|crispy }}
+        <button class="btn btn-primary" type="submit">Add item</button>
+    </form>
+</div>
+
+{% endblock %}

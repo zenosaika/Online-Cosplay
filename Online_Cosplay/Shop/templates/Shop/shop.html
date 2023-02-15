@@ -1,0 +1,13 @@
+{% extends "Online_Cosplay/header.html" %}
+
+{% block content %}
+
+<h1>Welcome To Shop</h1>
+
+{% for item in items %}
+<div>
+    {{ item.name }}
+</div>
+{% endfor %}
+
+{% endblock %}
