@@ -45,6 +45,9 @@ def add_to_cart(request, id):
 
 @login_required
 def cart(request):
+    if not Cart.objects.filter(user=request.user):
+        cart = Cart(user=request.user, ordered=False)
+        cart.save()
     user_orders = Cart.objects.get(user=request.user).items.all()
     return render(request, 'Shop/cart.html', {'orders':user_orders})
         
