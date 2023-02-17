@@ -12,6 +12,8 @@ def add_item(request):
     if request.method == 'POST':
         form = NewItemForm(request.POST, request.FILES)
         if form.is_valid():
+            form = form.save(commit=False)
+            form.user = request.user
             form.save()
             messages.success(request, 'Add item successful.')
             return redirect('/shop')
@@ -50,4 +52,20 @@ def cart(request):
         cart.save()
     user_orders = Cart.objects.get(user=request.user).items.all()
     return render(request, 'Shop/cart.html', {'orders':user_orders})
+
+@login_required
+def dashboard(request):
+    items = Item.objects.filter(user=request.user)
+    return render(request, 'Shop/dashboard.html', {'items':items})
+
+@login_required
+def remove(request, id):
+    item = Item.objects.get(id=id)
+    if item.user == request.user:
+        item.delete()
+        messages.success(request, 'Remove item from cart successful.')
+        return redirect('/dashboard')
+    messages.error(request, "You don't have permission to remove this item.")
+    return redirect('/dashboard')
+        
         
