@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 def shop(request):
     return render(request, 'Shop/shop.html', {'items':Item.objects.all})
 
+@login_required
 def add_item(request):
     if request.method == 'POST':
         form = NewItemForm(request.POST, request.FILES)
