@@ -14,31 +14,29 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
+                    <a class="nav-link nav1" href="/">Home</a>
+                </li>
+                {% if not user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link nav2" href="/register">Register</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/register">Register</a>
+                    <a class="nav-link nav3" href="/login">Login</a>
+                </li>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link nav4" href="/logout">Logout</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link nav5" href="/shop">Shop</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/login">Login</a>
+                    <a class="nav-link nav6" href="/cart">Cart</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin">Admin</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/shop">Shop</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/cart">Cart</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/add_item">Add Item</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/dashboard">Dashboard</a>
+                    <a class="nav-link nav7" href="/dashboard">Dashboard</a>
                 </li>
             </ul>
         </div>

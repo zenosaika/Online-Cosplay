@@ -3,6 +3,10 @@
 {% block content %}
 
 <style>
+  .nav7 {
+    color: rgb(31, 139, 158);
+  }
+
   body {
     background-color: #eee;
   }
@@ -62,13 +66,49 @@
     margin: 35px;
     row-gap: 10px;
   }
+
+  .button-1 {
+    background: #ec008c;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #fc6767, #ec008c);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #fc6767, #ec008c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-radius: 8px;
+    border-style: none;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    height: 40px;
+    line-height: 20px;
+    list-style: none;
+    margin-top: 20px;
+    outline: none;
+    padding: 10px 16px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: color 100ms;
+    vertical-align: baseline;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  .button-1:hover,
+  .button-1:focus {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
 </style>
 
 <div class="container mt-5">
-    <h1>
-        <span style="color: rgb(31, 139, 158);">{{ user.username }}</span>
-        <span style="color:rgb(58, 58, 58);">'s Dashboard</span>
-    </h1>
+  <h1>
+    <span style="color: rgb(31, 139, 158)">{{ user.username }}</span>
+    <span style="color: rgb(58, 58, 58)">'s Dashboard</span>
+  </h1>
+  <form action="/add_item">
+    <button class="button-1" type="submit">I Wanna Sell Something !!</button>
+  </form>
   <div class="row1">
     {% for item in items %}
     <div class="col-md-3">
