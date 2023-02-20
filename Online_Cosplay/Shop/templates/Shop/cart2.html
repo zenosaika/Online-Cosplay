@@ -15,9 +15,11 @@
     display: flex;
     flex-direction: column;
     width: 400px;
+    height: fit-content;
     margin: 50px;
+    padding: 50px;
     border-radius: 2rem;
-    
+
     background: rgba(255, 255, 255, 0.2);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(5px);
@@ -26,7 +28,10 @@
   }
 
   .inner-box {
-    margin: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100%;
   }
 
   .flex-container {
@@ -96,6 +101,40 @@
     margin: 35px;
     row-gap: 10px;
   }
+
+  .button-1 {
+    background: #ec008c;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #fc6767, #ec008c);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #fc6767, #ec008c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-radius: 8px;
+    border-style: none;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    height: 40px;
+    line-height: 20px;
+    list-style: none;
+    margin-top: 20px;
+    outline: none;
+    padding: 10px 16px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: color 100ms;
+    vertical-align: baseline;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  .button-1:hover,
+  .button-1:focus {
+    background-color: aqua;
+  }
+
 </style>
 
 
@@ -143,6 +182,8 @@
 
 <div class="conclusion-box">
   <div class="inner-box">
+
+    <div>
     <div class="flex-conclusion">
       <h2 style="color:rgb(58, 58, 58); margin-bottom: 20px;">Order Summary</h2>
     </div>
@@ -160,9 +201,17 @@
       <p style="font-weight: bold; color:rgb(75, 75, 75);">Total</p>
       <p style="font-weight: bold; color:rgb(75, 75, 75);">{{ total }} ฿</p>
     </div>
+    </div>
+
+    <div class="flex-conclusion">
+      <br>
+      <form action="/payment">
+        <button class="button-1" type="submit">Take My Money Now !!</button>
+      </form>
+    </div>
+
   </div>
 </div>
-
 </div>
 
 {% endblock %}

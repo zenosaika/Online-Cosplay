@@ -73,4 +73,6 @@ def remove(request, id):
     messages.error(request, "You don't have permission to remove this item.")
     return redirect('/dashboard')
         
-        
+@login_required
+def payment(request):
+    return render(request, 'Shop/payment.html')
