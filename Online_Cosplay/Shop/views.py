@@ -52,7 +52,11 @@ def cart(request):
         cart = Cart(user=request.user, ordered=False)
         cart.save()
     user_orders = Cart.objects.get(user=request.user).items.all()
-    return render(request, 'Shop/cart.html', {'orders':user_orders})
+    conclusion = []
+    for order in user_orders:
+        conclusion.append({'name':order.item.name, 'price':f'{order.total_price:,.2f}'})
+    total = f'{sum([order.total_price for order in user_orders]):,.2f}'
+    return render(request, 'Shop/cart2.html', {'orders':user_orders, 'conclusion':conclusion, 'total':total})
 
 @login_required
 def dashboard(request):
