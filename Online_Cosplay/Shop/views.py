@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Item, Order, Cart
-from .forms import NewItemForm
+from .models import Item, Order, Cart, ShippingInformation
+from .forms import NewItemForm, NewAddressForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
@@ -75,4 +75,43 @@ def remove(request, id):
         
 @login_required
 def payment(request):
-    return render(request, 'Shop/payment.html')
+    if not ShippingInformation.objects.filter(user=request.user):
+        shipping_info = ShippingInformation(user=request.user)
+        shipping_info.save()
+    try:
+        user_orders = Cart.objects.get(user=request.user).items.all()
+        conclusion = []
+        for order in user_orders:
+            conclusion.append({'name':order.item.name, 'price':f'{order.total_price:,.2f}'})
+        total = f'{sum([order.total_price for order in user_orders]):,.2f}'
+        user_addresses = ShippingInformation.objects.get(user=request.user).address.all()
+        return render(request, 'Shop/payment.html', {'conclusion':conclusion, 'total':total, 'addresses':user_addresses})
+    except:
+        return redirect('/cart')
+    
+@login_required
+def add_address(request):
+    if request.method == 'POST':
+        address = NewAddressForm(request.POST)
+        if address.is_valid():
+            address = address.save(commit=False)
+            address.user = request.user
+            address.save()
+
+            shipping_info = ShippingInformation.objects.filter(user=request.user)
+            if shipping_info:
+                shipping_info[0].address.add(address)
+                shipping_info[0].save()
+            else:
+                new_shipping_info = ShippingInformation(user=request.user)
+                new_shipping_info.address.add(address)
+                new_shipping_info.save()
+
+            messages.success(request, 'Add new address successful.')
+            return redirect('/payment')
+        else:
+            messages.error(request, 'Invalid information.')
+            return redirect('/payment')
+    else:
+        address = NewAddressForm()
+        return render(request, 'Shop/add_address.html', {'new_address_form':address})

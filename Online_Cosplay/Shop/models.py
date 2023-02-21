@@ -18,7 +18,6 @@ class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
-    ordered = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.quantity} of {self.item} from {self.user}'
@@ -31,6 +30,23 @@ class Cart(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     items = models.ManyToManyField(Order)
     ordered = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.user}'
+    
+class Address(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=64)
+    phone = models.CharField(max_length=10)
+    address = models.TextField()
+    zipcode = models.CharField(max_length=5)
+
+    def __str__(self):
+        return f'{self.user} ({self.address[:5]})'
+
+class ShippingInformation(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    address = models.ManyToManyField(Address)
 
     def __str__(self):
         return f'{self.user}'

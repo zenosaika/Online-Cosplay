@@ -1,0 +1,15 @@
+{% extends "Online_Cosplay/header.html" %} 
+
+{% load crispy_forms_tags %} 
+
+{% block content %}
+
+<div class="container py-5">
+  <h1>New Address Form</h1>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %} {{ new_address_form|crispy }}
+    <button class="btn btn-primary" type="submit">Submit</button>
+  </form>
+</div>
+
+{% endblock %}
