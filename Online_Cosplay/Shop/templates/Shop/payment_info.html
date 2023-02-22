@@ -16,7 +16,7 @@
     flex-direction: column;
     width: 400px;
     height: fit-content;
-    margin: 50px;
+    margin: 30px;
     padding: 50px;
     border-radius: 2rem;
 
@@ -38,10 +38,10 @@
     background-color: #eee;
     padding : 20px;
     border-radius: 2rem;
-    box-shadow: 0 4px 30px rgba(5, 238, 36, 0.1);
+    box-shadow: 0 4px 30px rgba(5, 153, 238, 0.2);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(5, 153, 238, 0.4);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -145,8 +145,38 @@
     touch-action: manipulation;
   }
 
+  .button-2 {
+    background: #00B4DB;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #0083B0, #00B4DB);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #0083B0, #00B4DB); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-radius: 8px;
+    border-style: none;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    height: 40px;
+    line-height: 20px;
+    list-style: none;
+    margin-top: 20px;
+    outline: none;
+    padding: 10px 16px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: color 100ms;
+    vertical-align: baseline;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
   .button-1:hover,
-  .button-1:focus {
+  .button-1:focus,
+  .button-2:hover,
+  .button-2:focus {
     border: 1px solid rgba(255, 255, 255, 0.3);
   }
 
@@ -154,7 +184,7 @@
 
 <div class="flex-container">
 
-<div class="conclusion-box">
+<div class="conclusion-box" style="margin-right: 15px;">
   <div class="inner-box">
 
     <div>
@@ -176,31 +206,20 @@
       <p style="font-weight: bold; color:rgb(75, 75, 75);">{{ total }} ฿</p>
     </div>
     </div>
+
   </div>
 </div>
 
-<div class="conclusion-box">
+<div class="conclusion-box" style="margin-left: 15px; margin-right: 15px;">
   <div class="inner-box">
 
     <div>
     <div class="flex-conclusion">
       <h2 style="color:rgb(58, 58, 58); margin-bottom: 20px;">Shipping Address</h2>
       <form action="/add_address">
-        <button class="button-1" type="submit">New</button>
+        <button class="button-2" type="submit">New</button>
       </form>
     </div>
-
-    <!-- <div class="flex-conclusion" style="flex-direction: column; row-gap: 20px;">
-      {% for address in addresses %}
-      <div class="address-box">
-        <p style="color: grey; font-size: 0.9em;">
-          {{ address.name }}<br>
-          Tel : {{ address.phone }}<br>
-          {{ address.address }} {{ address.zipcode }}
-        </p>
-      </div>
-      {% endfor %}
-    </div> -->
 
     <div class="flex-conclusion" style="flex-direction: column; row-gap: 20px;">
       {% for address in selected_address %}
@@ -212,9 +231,37 @@
         </p>
       </div>
       {% endfor %}
+      <a href="/select_address">Select Address</a>
+    </div>
     </div>
 
+  </div>
+</div>
+
+<div class="conclusion-box" style="margin-left: 15px;">
+  <div class="inner-box">
+
+    <div>
+    <div class="flex-conclusion">
+      <h2 style="color:rgb(58, 58, 58); margin-bottom: 20px;">Payment Method</h2>
     </div>
+    <br>
+    <div class="flex-conclusion" style="flex-direction: column; row-gap: 20px;">
+      <form method="POST" action="/payment">
+        {% csrf_token %}
+        <input type="radio" name="payment_method" checked>
+          <img src="/media/promptpay.png" width="50%">
+        </input>
+        <br><br>
+        <input type="radio" name="payment_method">
+          <img src="/media/truewallet.png" width="50%">
+        </input>
+        <br><br>
+        <button class="button-2" type="submit">Goodbye My Money~!</button>
+      </form>
+    </div>
+    </div>
+
   </div>
 </div>
 

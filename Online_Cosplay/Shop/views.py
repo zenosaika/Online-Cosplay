@@ -74,7 +74,7 @@ def remove(request, id):
     return redirect('/dashboard')
         
 @login_required
-def payment(request):
+def payment_info(request):
     if not ShippingInformation.objects.filter(user=request.user):
         shipping_info = ShippingInformation(user=request.user)
         shipping_info.save()
@@ -86,7 +86,7 @@ def payment(request):
         total = f'{sum([order.total_price for order in user_orders]):,.2f}'
         user_addresses = ShippingInformation.objects.get(user=request.user).address.all()
         selected_address = user_addresses.filter(selected=True)
-        return render(request, 'Shop/payment.html', {'conclusion':conclusion, 'total':total, 'addresses':user_addresses, 'selected_address':selected_address})
+        return render(request, 'Shop/payment_info.html', {'conclusion':conclusion, 'total':total, 'addresses':user_addresses, 'selected_address':selected_address})
     except:
         return redirect('/cart')
     
