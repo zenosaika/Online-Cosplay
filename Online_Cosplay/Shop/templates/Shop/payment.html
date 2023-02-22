@@ -38,7 +38,7 @@
     background-color: #eee;
     padding : 20px;
     border-radius: 2rem;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 30px rgba(5, 238, 36, 0.1);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -152,7 +152,6 @@
 
 </style>
 
-
 <div class="flex-container">
 
 <div class="conclusion-box">
@@ -191,11 +190,26 @@
       </form>
     </div>
 
-    <div class="flex-conclusion" style="flex-direction: column; row-gap: 20px;">
+    <!-- <div class="flex-conclusion" style="flex-direction: column; row-gap: 20px;">
       {% for address in addresses %}
       <div class="address-box">
-        <p style="color: grey; font-size: 0.9em;">{{ address.name }} (Tel: {{ address.phone }})</p>
-        <p style="color: grey; font-size: 0.9em;">{{ address.address }} (Zipcode: {{ address.zipcode }})</p>
+        <p style="color: grey; font-size: 0.9em;">
+          {{ address.name }}<br>
+          Tel : {{ address.phone }}<br>
+          {{ address.address }} {{ address.zipcode }}
+        </p>
+      </div>
+      {% endfor %}
+    </div> -->
+
+    <div class="flex-conclusion" style="flex-direction: column; row-gap: 20px;">
+      {% for address in selected_address %}
+      <div class="address-box">
+        <p style="color: grey; font-size: 0.9em;">
+          {{ address.name }}<br>
+          Tel : {{ address.phone }}<br>
+          {{ address.address }} {{ address.zipcode }}
+        </p>
       </div>
       {% endfor %}
     </div>

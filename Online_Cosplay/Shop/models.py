@@ -40,6 +40,7 @@ class Address(models.Model):
     phone = models.CharField(max_length=10)
     address = models.TextField()
     zipcode = models.CharField(max_length=5)
+    selected = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.user} ({self.address[:5]})'

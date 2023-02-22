@@ -85,7 +85,8 @@ def payment(request):
             conclusion.append({'name':order.item.name, 'price':f'{order.total_price:,.2f}'})
         total = f'{sum([order.total_price for order in user_orders]):,.2f}'
         user_addresses = ShippingInformation.objects.get(user=request.user).address.all()
-        return render(request, 'Shop/payment.html', {'conclusion':conclusion, 'total':total, 'addresses':user_addresses})
+        selected_address = user_addresses.filter(selected=True)
+        return render(request, 'Shop/payment.html', {'conclusion':conclusion, 'total':total, 'addresses':user_addresses, 'selected_address':selected_address})
     except:
         return redirect('/cart')
     
@@ -96,10 +97,15 @@ def add_address(request):
         if address.is_valid():
             address = address.save(commit=False)
             address.user = request.user
+            address.selected = True
             address.save()
 
             shipping_info = ShippingInformation.objects.filter(user=request.user)
             if shipping_info:
+                selected_address = shipping_info[0].address.filter(selected=True)
+                for addr in selected_address:
+                    addr.selected = False
+                    addr.save()
                 shipping_info[0].address.add(address)
                 shipping_info[0].save()
             else:
