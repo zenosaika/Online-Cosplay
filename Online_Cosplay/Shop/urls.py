@@ -10,4 +10,5 @@ urlpatterns = [
     path('remove/<int:id>', views.remove, name='remove'),
     path('payment_info/', views.payment_info, name='paymentinfo'),
     path('add_address/', views.add_address, name='addaddress'),
+    path('select_address/', views.select_address, name='selectaddress'),
 ]

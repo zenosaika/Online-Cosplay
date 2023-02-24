@@ -121,3 +121,9 @@ def add_address(request):
     else:
         address = NewAddressForm()
         return render(request, 'Shop/add_address.html', {'new_address_form':address})
+
+def select_address(request):
+    shipping_info = ShippingInformation.objects.filter(user=request.user)
+    if shipping_info:
+        addresses = shipping_info[0].address.all()
+    return render(request, 'Shop/select_address.html', {'addresses':addresses})
