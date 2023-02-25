@@ -114,16 +114,32 @@ def add_address(request):
                 new_shipping_info.save()
 
             messages.success(request, 'Add new address successful.')
-            return redirect('/payment')
+            return redirect('/payment_info')
         else:
             messages.error(request, 'Invalid information.')
-            return redirect('/payment')
+            return redirect('/payment_info')
     else:
         address = NewAddressForm()
         return render(request, 'Shop/add_address.html', {'new_address_form':address})
 
 def select_address(request):
     shipping_info = ShippingInformation.objects.filter(user=request.user)
+    if request.method == 'POST':
+        selected_address_id = request.POST.get('selected_address')
+        if selected_address_id:
+            selected_address = shipping_info[0].address.filter(selected=True)
+            for addr in selected_address:
+                addr.selected = False
+                addr.save()
+            new_selected_address = shipping_info[0].address.get(id=selected_address_id)
+            new_selected_address.selected = True
+            new_selected_address.save()
+            messages.success(request, 'Change address successful.')
+            return redirect('/payment_info')
+        else:
+            messages.error(request, 'Please select an address before submit.')
+            return redirect('/select_address')
+    addresses = []
     if shipping_info:
         addresses = shipping_info[0].address.all()
     return render(request, 'Shop/select_address.html', {'addresses':addresses})

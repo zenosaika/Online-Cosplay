@@ -3,10 +3,6 @@
 {% block content %}
 
 <style>
-  .nav5 {
-    color: rgb(31, 139, 158);
-  }
-
   body {
     background-color: #eee;
   }
@@ -129,13 +125,13 @@
 </style>
 
 <div class="container mt-5">
-    <form method="POST"></form>
+    <form method="POST">
       {% csrf_token %}
       <div class="flex-conclusion" style="flex-direction: column;">
           
             {% for address in addresses %}
               <div class="flex-conclusion" style="align-items: center; gap: 20px">
-                <input type="radio" name="selected_address"></input>
+                <input type="radio" name="selected_address" value="{{ address.id }}"></input>
                 <div class="address-box">
                   <p style="color: grey; font-size: 0.9em;">
                       {{ address.name }}<br>
