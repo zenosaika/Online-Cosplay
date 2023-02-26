@@ -39,6 +39,7 @@ def add_to_cart(request, id):
                 cart[0].save()
             else:
                 new_cart = Cart(user=request.user, ordered=False)
+                new_cart.items.add(new_order)
                 new_cart.save()
     else:
         messages.error(request, "Sorry, we don't have this item.")
@@ -48,16 +49,19 @@ def add_to_cart(request, id):
 
 @login_required
 def cart(request):
-    if not Cart.objects.filter(user=request.user):
+    cart = Cart.objects.filter(user=request.user, ordered=False)
+    if cart:
+        orders = cart[0].items.all()
+        conclusion = []
+        for order in orders:
+            conclusion.append({'name':order.item.name, 'price':f'{order.total_price:,.2f}'})
+        total = f'{sum([order.total_price for order in orders]):,.2f}'
+        return render(request, 'Shop/cart.html', {'orders':orders, 'conclusion':conclusion, 'total':total})
+    else:
         cart = Cart(user=request.user, ordered=False)
         cart.save()
-    user_orders = Cart.objects.get(user=request.user).items.all()
-    conclusion = []
-    for order in user_orders:
-        conclusion.append({'name':order.item.name, 'price':f'{order.total_price:,.2f}'})
-    total = f'{sum([order.total_price for order in user_orders]):,.2f}'
-    return render(request, 'Shop/cart2.html', {'orders':user_orders, 'conclusion':conclusion, 'total':total})
-
+        return render(request, 'Shop/cart.html')
+    
 @login_required
 def dashboard(request):
     items = Item.objects.filter(user=request.user)
@@ -65,26 +69,32 @@ def dashboard(request):
 
 @login_required
 def remove(request, id):
-    item = Item.objects.get(id=id)
-    if item.user == request.user:
-        item.delete()
-        messages.success(request, 'Remove item from cart successful.')
+    item = Item.objects.filter(id=id)
+    if item:
+        if item[0].user == request.user:
+            item[0].delete()
+            messages.success(request, 'Remove item from cart successful.')
+            return redirect('/dashboard')
+        messages.error(request, "You don't have permission to remove this item.")
         return redirect('/dashboard')
-    messages.error(request, "You don't have permission to remove this item.")
+    messages.error(request, "Sorry, This item does not exist.")
     return redirect('/dashboard')
         
 @login_required
 def payment_info(request):
-    if not ShippingInformation.objects.filter(user=request.user):
+    shipping_info = ShippingInformation.objects.filter(user=request.user)
+    if not shipping_info:
         shipping_info = ShippingInformation(user=request.user)
         shipping_info.save()
+    else:
+        shipping_info = shipping_info[0]
     try:
-        user_orders = Cart.objects.get(user=request.user).items.all()
+        orders = Cart.objects.get(user=request.user, ordered=False).items.all()
         conclusion = []
-        for order in user_orders:
+        for order in orders:
             conclusion.append({'name':order.item.name, 'price':f'{order.total_price:,.2f}'})
-        total = f'{sum([order.total_price for order in user_orders]):,.2f}'
-        user_addresses = ShippingInformation.objects.get(user=request.user).address.all()
+        total = f'{sum([order.total_price for order in orders]):,.2f}'
+        user_addresses = shipping_info.address.all()
         selected_address = user_addresses.filter(selected=True)
         return render(request, 'Shop/payment_info.html', {'conclusion':conclusion, 'total':total, 'addresses':user_addresses, 'selected_address':selected_address})
     except:
@@ -93,45 +103,50 @@ def payment_info(request):
 @login_required
 def add_address(request):
     if request.method == 'POST':
-        address = NewAddressForm(request.POST)
-        if address.is_valid():
-            address = address.save(commit=False)
-            address.user = request.user
-            address.selected = True
-            address.save()
+        new_address = NewAddressForm(request.POST)
+        if new_address.is_valid():
+            new_address = new_address.save(commit=False)
+            new_address.user = request.user
+            new_address.selected = True
+            new_address.save()
 
             shipping_info = ShippingInformation.objects.filter(user=request.user)
             if shipping_info:
                 selected_address = shipping_info[0].address.filter(selected=True)
-                for addr in selected_address:
-                    addr.selected = False
-                    addr.save()
-                shipping_info[0].address.add(address)
+                for address in selected_address:
+                    address.selected = False
+                    address.save()
+                shipping_info[0].address.add(new_address)
                 shipping_info[0].save()
             else:
                 new_shipping_info = ShippingInformation(user=request.user)
-                new_shipping_info.address.add(address)
+                new_shipping_info.address.add(new_address)
                 new_shipping_info.save()
 
             messages.success(request, 'Add new address successful.')
             return redirect('/payment_info')
         else:
             messages.error(request, 'Invalid information.')
-            return redirect('/payment_info')
+            return redirect('/add_address')
     else:
         address = NewAddressForm()
         return render(request, 'Shop/add_address.html', {'new_address_form':address})
 
 def select_address(request):
     shipping_info = ShippingInformation.objects.filter(user=request.user)
+    if not shipping_info:
+        shipping_info = ShippingInformation(user=request.user)
+        shipping_info.save()
+    else:
+        shipping_info = shipping_info[0]
     if request.method == 'POST':
         selected_address_id = request.POST.get('selected_address')
         if selected_address_id:
-            selected_address = shipping_info[0].address.filter(selected=True)
-            for addr in selected_address:
-                addr.selected = False
-                addr.save()
-            new_selected_address = shipping_info[0].address.get(id=selected_address_id)
+            selected_address = shipping_info.address.filter(selected=True)
+            for address in selected_address:
+                address.selected = False
+                address.save()
+            new_selected_address = shipping_info.address.get(id=selected_address_id)
             new_selected_address.selected = True
             new_selected_address.save()
             messages.success(request, 'Change address successful.')
@@ -139,7 +154,5 @@ def select_address(request):
         else:
             messages.error(request, 'Please select an address before submit.')
             return redirect('/select_address')
-    addresses = []
-    if shipping_info:
-        addresses = shipping_info[0].address.all()
+    addresses = shipping_info.address.all()
     return render(request, 'Shop/select_address.html', {'addresses':addresses})

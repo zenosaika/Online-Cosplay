@@ -3,11 +3,54 @@
 {% block content %}
 
 <style>
+  .nav6 {
+    color: rgb(31, 139, 158);
+  }
+
   body {
     background-color: #eee;
   }
   .container {
     width: 900px;
+    margin-right: 0px;
+  }
+
+  .conclusion-box {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: fit-content;
+    margin: 50px;
+    padding: 50px;
+    border-radius: 2rem;
+
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .inner-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100%;
+  }
+
+  .flex-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+
+  .flex-conclusion {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: nowrap;
+    justify-content: space-between;
   }
 
   .card {
@@ -62,8 +105,44 @@
     margin: 35px;
     row-gap: 10px;
   }
+
+  .button-1 {
+    background: #ec008c;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #fc6767, #ec008c);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #fc6767, #ec008c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-radius: 8px;
+    border-style: none;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    height: 40px;
+    line-height: 20px;
+    list-style: none;
+    margin-top: 20px;
+    outline: none;
+    padding: 10px 16px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: color 100ms;
+    vertical-align: baseline;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  .button-1:hover,
+  .button-1:focus {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
 </style>
 
+
+<div class="flex-container">
 <div class="container mt-5">
     <h1>
         <span style="color: rgb(31, 139, 158);">{{ user.username }}</span>
@@ -103,6 +182,40 @@
     </div>
     {% endfor %}
   </div>
+</div>
+
+<div class="conclusion-box">
+  <div class="inner-box">
+
+    <div>
+    <div class="flex-conclusion">
+      <h2 style="color:rgb(58, 58, 58); margin-bottom: 20px;">Order Summary</h2>
+    </div>
+    <div class="flex-conclusion">
+      <p style="font-weight: bold; color:rgb(75, 75, 75);">Description</p>
+      <p style="font-weight: bold; color:rgb(75, 75, 75);">Amount</p>
+    </div>
+    {% for order in conclusion %}
+    <div class="flex-conclusion">
+      <p style="color: grey; font-size: 0.9em;">{{ order.name }}</p>
+      <p style="color: grey; font-size: 0.9em;">{{ order.price }}</p>
+    </div>
+    {% endfor %}
+    <div class="flex-conclusion">
+      <p style="font-weight: bold; color:rgb(75, 75, 75);">Total</p>
+      <p style="font-weight: bold; color:rgb(75, 75, 75);">{{ total }} ฿</p>
+    </div>
+    </div>
+
+    <div class="flex-conclusion">
+      <br>
+      <form action="/payment_info">
+        <button class="button-1" type="submit">Take My Money Now !!</button>
+      </form>
+    </div>
+
+  </div>
+</div>
 </div>
 
 {% endblock %}

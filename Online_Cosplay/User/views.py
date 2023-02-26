@@ -15,7 +15,7 @@ def register_request(request):
             return redirect('/')
         messages.error(request, 'Invalid Information.')
     form = RegisterForm()
-    return render(request, 'User/register2.html', {'register_form':form})
+    return render(request, 'User/register.html', {'register_form':form})
 
 def login_request(request):
     if request.method == 'POST':
@@ -30,7 +30,7 @@ def login_request(request):
                 return redirect('/')
         messages.error(request, 'Invalid username or password.')
     form = AuthenticationForm()
-    return render(request, 'User/login2.html', {'login_form':form})
+    return render(request, 'User/login.html', {'login_form':form})
 
 def logout_request(request):
     logout(request)
